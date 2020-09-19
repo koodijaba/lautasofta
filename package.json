@@ -1,0 +1,29 @@
+{
+  "name": "lautasofta",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "parcel build -d src/main/resources/static/css/ src/main/scss/index.scss",
+    "watch": "parcel watch  -d src/main/resources/static/css/ --no-hmr --log-level 4 src/main/scss/index.scss"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/koodijaba/lautasofta.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/koodijaba/lautasofta/issues"
+  },
+  "homepage": "https://github.com/koodijaba/lautasofta#readme",
+  "devDependencies": {
+    "parcel-bundler": "^1.12.4",
+    "sass": "^1.26.11"
+  },
+  "dependencies": {
+    "bootstrap": "^4.5.2"
+  }
+}

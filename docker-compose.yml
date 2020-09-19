@@ -8,6 +8,11 @@ services:
     - 5432:5432
     environment:
       POSTGRES_PASSWORD: example
+  solr:
+    image: solr
+    restart: always
+    ports:
+    - 8983:8983
   adminer:
     image: adminer
     restart: always
