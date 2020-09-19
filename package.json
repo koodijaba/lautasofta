@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "parcel build -d src/main/resources/static/css/ src/main/scss/index.scss",
-    "watch": "parcel watch  -d src/main/resources/static/css/ --no-hmr --log-level 4 src/main/scss/index.scss"
+    "build": "parcel build -d target/classes/static/css/ --public-url ./static/ src/main/scss/index.scss",
+    "watch": "parcel watch  -d target/classes/static/css/ --no-hmr --log-level 4 --public-url ./static/ src/main/scss/index.scss"
   },
   "repository": {
     "type": "git",
