@@ -29,7 +29,8 @@
             </div>
             <c:if test="${loop.last and not threads.last}">
                 <div class="my-4 text-center">
-                    <a href="?before=${thread.modifiedAt}"><spring:message code="loadMore"/></a>
+                    <spring:eval expression="T(org.springframework.util.Base64Utils).encodeToString(thread.modifiedAt.toString().getBytes())" var="cursor"/>
+                    <a href="?cursor=${cursor}"><spring:message code="loadMore"/></a>
                 </div>
             </c:if>
         </c:forEach>

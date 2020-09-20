@@ -11,6 +11,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.Base64Utils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.security.Principal;
 import java.time.Instant;
+import java.util.Optional;
 
 import static java.util.stream.Collectors.toUnmodifiableList;
 import static org.springframework.data.domain.Sort.sort;
@@ -47,15 +49,18 @@ public class HomeController {
 
     @GetMapping("/{board}")
     public String showBoard(@PathVariable Board board,
-                            @RequestParam(required = false) Instant before,
+                            @RequestParam(required = false) byte[] cursor,
                             Model model,
                             @ModelAttribute("thread") Thread thread) {
         model.addAttribute("board", board);
+        Optional<Instant> before = Optional.ofNullable(cursor)
+            .map(Base64Utils::decode)
+            .map(String::new)
+            .map(Instant::parse);
         Pageable pageable = PageRequest.of(0, 10, sort(Thread.class).by(Thread::getModifiedAt).descending());
-        model.addAttribute("threads", before == null
-                ? threadRepository.findByBoard(board, pageable)
-                : threadRepository.findByBoardAndModifiedAtIsBefore(board, before, pageable)
-        );
+        model.addAttribute("threads", before
+                .map(b -> threadRepository.findByBoardAndModifiedAtIsBefore(board, b, pageable))
+                .orElseGet(() -> threadRepository.findByBoard(board, pageable)));
         return "board";
     }
 
