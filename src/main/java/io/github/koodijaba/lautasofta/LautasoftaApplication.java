@@ -1,6 +1,7 @@
 package io.github.koodijaba.lautasofta;
 
-import io.github.koodijaba.lautasofta.domain.*;
+import io.github.koodijaba.lautasofta.domain.Board;
+import io.github.koodijaba.lautasofta.domain.Reply;
 import io.github.koodijaba.lautasofta.domain.Thread;
 import io.github.koodijaba.lautasofta.domain.repository.jpa.BoardRepository;
 import io.github.koodijaba.lautasofta.domain.repository.jpa.ReplyRepository;
@@ -11,7 +12,6 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.data.domain.AuditorAware;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
@@ -50,7 +50,9 @@ public class LautasoftaApplication extends WebSecurityConfigurerAdapter {
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		http.authorizeRequests().antMatchers("/**").permitAll();
+		http.authorizeRequests()
+				.antMatchers("/**").permitAll()
+				.and().formLogin();
 	}
 
 	@Bean
