@@ -6,12 +6,12 @@
 
 <ui:layout>
     <section>
-            <form:form method="POST" modelAttribute="reply">
+        <form:form method="POST" modelAttribute="reply">
             <div class="form-group">
                 <form:label path="content"><spring:message code="post.content"/></form:label>
-                <form:textarea path="content" cssClass="form-control"/>
+                <form:textarea path="content" cssClass="form-control" cssErrorClass="form-control is-invalid"/>
+                <form:errors path="content" cssClass="invalid-feedback" element="div"/>
             </div>
-            <sec:csrfInput/>
             <button type="submit" class="btn btn-primary"><spring:message code="submit"/></button>
         </form:form>
     </section>
