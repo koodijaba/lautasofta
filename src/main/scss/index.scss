@@ -3,6 +3,8 @@
 @import "~bootstrap/scss/variables";
 @import "~bootstrap/scss/mixins";
 
+$card-inner-border-radius: 0;
+
 // Optional
 @import "~bootstrap/scss/root";
 @import "~bootstrap/scss/reboot";
@@ -38,3 +40,15 @@
 @import "~bootstrap/scss/spinners";
 @import "~bootstrap/scss/utilities";
 @import "~bootstrap/scss/print";
+
+@media (prefers-color-scheme: dark) {
+  $body-bg: lighten(black, 10%);
+  $card-bg: lighten(black, 20%);
+  $body-color: darken(white, 10%);
+  $input-bg: lighten(black, 30%);
+  $input-focus-bg: $input-bg;
+  $input-border-width: 0;
+  @import "~bootstrap/scss/reboot";
+  @import "~bootstrap/scss/card";
+  @import "~bootstrap/scss/forms";
+}
