@@ -9,6 +9,9 @@ import io.github.koodijaba.lautasofta.domain.repository.search.ThreadSearchRepos
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.solr.core.SolrTemplate;
+import org.springframework.data.solr.core.mapping.SimpleSolrMappingContext;
+import org.springframework.data.solr.repository.support.SolrEntityInformationCreatorImpl;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.Base64Utils;
@@ -18,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.security.Principal;
+import java.time.Duration;
 import java.time.Instant;
 import java.util.Optional;
 
@@ -29,6 +33,7 @@ public class HomeController {
     private final ThreadRepository threadRepository;
     private final ThreadSearchRepository threadSearchRepository;
     private final ReplyRepository replyRepository;
+    private final SolrTemplate solrTemplate;
 
     @InitBinder
     public void setAllowedFields(WebDataBinder dataBinder) {
@@ -36,10 +41,11 @@ public class HomeController {
     }
 
     @Autowired
-    public HomeController(ThreadRepository threadRepository, ThreadSearchRepository threadSearchRepository, ReplyRepository replyRepository) {
+    public HomeController(ThreadRepository threadRepository, ThreadSearchRepository threadSearchRepository, ReplyRepository replyRepository, SolrTemplate solrTemplate) {
         this.threadRepository = threadRepository;
         this.threadSearchRepository = threadSearchRepository;
         this.replyRepository = replyRepository;
+        this.solrTemplate = solrTemplate;
     }
 
     @GetMapping("/")
@@ -73,7 +79,12 @@ public class HomeController {
             return showBoard(board, null, model, thread);
         }
         threadRepository.save(thread);
-        threadSearchRepository.save(thread);
+        // SimpleSolrRepository#save(S, Duration) does an unnecessary manual commit so we use SolrTemplate directly
+        solrTemplate.saveBean(
+                new SolrEntityInformationCreatorImpl(new SimpleSolrMappingContext()).getEntityInformation(Thread.class).getCollectionName(),
+                thread,
+                Duration.ofMinutes(1)
+        );
         return "redirect:/" + board.getName();
     }
 
